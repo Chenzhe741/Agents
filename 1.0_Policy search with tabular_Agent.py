@@ -13,7 +13,7 @@ import numpy as np
 
 import virl
 
-env = virl.Epidemic(stochastic=False, noisy=True)
+env = virl.Epidemic(stochastic=True, noisy=True)
 #env = virl.Epidemic(stochastic=False, noisy=False, problem_id=9)
 """
 Args:
@@ -52,7 +52,6 @@ while not done:
     R_qp=qp/Sum
     R_rp=rp/Sum
     
- 
     print('Total',Sum)
     
     print('Sup People',R_sp*100,'%')
@@ -60,7 +59,6 @@ while not done:
     print('Qrt People',R_qp*100,'%')
     print('Rcv people',R_rp*100,'%')
     
-
     """    
     if R_ip<0.01 and R_sp<0.01:
      at=0
@@ -74,24 +72,21 @@ while not done:
         at=1
     """    
     
-    if R_ip<=0.1 and R_sp<=0.1:
-        act=3
-    elif R_ip<=0.1 and R_sp>0.2:
+    if R_ip<=0.01:
+        if R_sp>R_rp>0.2:
+            act=3
+        elif R_sp<=R_rp<0.2:
+            act=2
+        elif R_sp<=R_ip:
+            act=1
+    else :
         act=2
-    elif R_ip<=0.2 and R_sp<=0.2:
-        act=2
-    elif R_ip>0.2 and R_sp>0.2:
-        act=1
-    
-    
-    
-    
+       
     s, r, done, i = env.step(action=act) # deterministic agent
     #s, r, done, i = env.step(action=np.random.choice(env.action_space.n)) #random agent
     states.append(s)
     
-    
-    
+     
     print('====added s is',s)
     
     rewards.append(r) #add  new
