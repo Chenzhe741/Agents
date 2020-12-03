@@ -18,45 +18,43 @@ env = virl.Epidemic(stochastic=False, noisy=True)
 """
 Args:
     stochastic (bool): Is the infection rate sampled from some distribution at the beginning of each episode (default: False)?
-    随机，是否从随机分布中抽样 默认否
     
     noisy (bool): Is the state a noisy estimate of the true state (default: False)?
-    噪音，是否有真实状态的评估 默认否
-    
+  
     problem_id (int): Deterministic parameterization of the epidemic (default: 0).
-    病例ID
+   
     
 """
-at = 0
+at = 0 #action
 
-states = []    #状态
-rewards = []   #奖励
-done = False   #是否完成
+states = []    #states numpy.ndarray
+rewards = []   #reward numpy.float64
+done = False   #finished or not
 
-s = env.reset()   #重置
-print('重置s',s)
+s = env.reset()   #reset the states
+print('reset',s)
 
-states.append(s)  #重置
+states.append(s)  #add new state
 while not done:
     
-    sp=float(s[0])
-    ip=float(s[1])
-    qp=float(s[2])
-    rp=float(s[3])
+    sp=float(s[0]) # suspectible people
+    ip=float(s[1]) # infectious people
+    qp=float(s[2]) # quarantined people
+    rp=float(s[3]) # recovered people
     
-    Sum=sp+ip+qp+rp
+    Sum=sp+ip+qp+rp #total people
     
-    Ratio_sp=sp/Sum
+    Ratio_sp=sp/Sum #ratio
     Ratio_ip=ip/Sum
     Ratio_qp=qp/Sum
     Ratio_rp=rp/Sum
     
-    print('感染比例',float(Ratio_ip))
-    print('总人数',Sum)
-    print('疑似感染人数',float(s[0]))
-    print('感染人数',float(s[1]),type(float(s[1])))
-    print('隔离人数',float(s[2]))
-    print('康复人数',float(s[3]))
+    print('Infected r',float(Ratio_ip))
+    print('Total',Sum)
+    print('ip is',float(s[0]))
+    print('ip is',float(s[1]),type(float(s[1])))
+    print('qp is',float(s[2]))
+    print('rp is',float(s[3]))
     
     
 
