@@ -18,56 +18,79 @@ env = virl.Epidemic(stochastic=False, noisy=True)
 """
 Args:
     stochastic (bool): Is the infection rate sampled from some distribution at the beginning of each episode (default: False)?
-
+    
+    
     noisy (bool): Is the state a noisy estimate of the true state (default: False)?
     
-    problem_id (int): Deterministic parameterization of the epidemic (default: 0).
     
+    problem_id (int): Deterministic parameterization of the epidemic (default: 0).
+   
     
 """
-at = 0
 
-states = []    #states numpy.ndarray
-rewards = []   #reward numpy.float64
-done = False   #finished or not
+r=0
+act = 0
+states = []   
+rewards = []  
+done = False   
 
-s = env.reset()   #reset the states
-print('重置s',s)
+s = env.reset()   
+print('Reset s',s)
 
-states.append(s)  #add new state
+states.append(s)  
 while not done:
     
-    sp=float(s[0]) # suspectible people
-    ip=float(s[1]) # infectious people
-    qp=float(s[2]) # quarantined people
-    rp=float(s[3]) # recovered people
+    sp=float(s[0])
+    ip=float(s[1])
+    qp=float(s[2])
+    rp=float(s[3])
+    
     Sum=sp+ip+qp+rp
     
-    Ratio_sp=sp/Sum
-    Ratio_ip=ip/Sum
-    Ratio_qp=qp/Sum
-    Ratio_rp=rp/Sum
+    R_sp=sp/Sum
+    R_ip=ip/Sum
+    R_qp=qp/Sum
+    R_rp=rp/Sum
     
-    print('Infected r',float(Ratio_ip))
+ 
     print('Total',Sum)
-    print('sp is',float(s[0]))
-    print('ip is',float(s[1]),type(float(s[1])))
-    print('qp is',float(s[2]))
-    print('rp is',float(s[3]))
     
+    print('Sup People',R_sp*100,'%')
+    print('Ifc People',R_ip*100,'%')
+    print('Qrt People',R_qp*100,'%')
+    print('Rcv people',R_rp*100,'%')
     
 
-    
-    if  0.01<Ratio_ip<0.1:
+    """    
+    if R_ip<0.01 and R_sp<0.01:
+     at=0
+    elif R_ip<=0.01 and R_sp>=0.25:
      at=2
-    elif 0.1<Ratio_ip<0.3:
+    elif R_ip<=0.01 and R_sp<=0.25:
      at=1
-    elif 0.3<Ratio_ip<0.5:
+    elif 0.01<=R_ip<=0.1 and R_sp<=0.01:
      at=3 
+    elif R_ip>0.3 and R_sp>0.3:
+        at=1
+    """    
     
-    s, r, done, i = env.step(action=at) # deterministic agent
+    if R_ip<=0.1 and R_sp<=0.1:
+        act=3
+    elif R_ip<=0.1 and R_sp>0.2:
+        act=2
+    elif R_ip<=0.2 and R_sp<=0.2:
+        act=2
+    elif R_ip>0.2 and R_sp>0.2:
+        act=1
+    
+    
+    
+    
+    s, r, done, i = env.step(action=act) # deterministic agent
     #s, r, done, i = env.step(action=np.random.choice(env.action_space.n)) #random agent
     states.append(s)
+    
+    
     
     print('====added s is',s)
     
@@ -77,10 +100,10 @@ while not done:
 labels = ['s[0]: susceptibles', 's[1]: infectious', 's[2]: quarantined', 's[3]: recovereds']
 states = np.array(states)
 
-print('==== states is',states,'states')
+#print('==== states is',states,'states',type(states))
 
-print('==== r is',r)
-print('==== i is',i)
+print('==== r is',r,type(r))
+print('==== i is',i,type(i))
 
 
 for i in range(4):
