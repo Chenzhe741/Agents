@@ -18,21 +18,21 @@ env = virl.Epidemic(stochastic=False, noisy=True)
 """
 Args:
     stochastic (bool): Is the infection rate sampled from some distribution at the beginning of each episode (default: False)?
-    
+
     noisy (bool): Is the state a noisy estimate of the true state (default: False)?
-  
+    
     problem_id (int): Deterministic parameterization of the epidemic (default: 0).
-   
+    
     
 """
-at = 0 #action
+at = 0
 
 states = []    #states numpy.ndarray
 rewards = []   #reward numpy.float64
 done = False   #finished or not
 
 s = env.reset()   #reset the states
-print('reset',s)
+print('重置s',s)
 
 states.append(s)  #add new state
 while not done:
@@ -41,17 +41,16 @@ while not done:
     ip=float(s[1]) # infectious people
     qp=float(s[2]) # quarantined people
     rp=float(s[3]) # recovered people
+    Sum=sp+ip+qp+rp
     
-    Sum=sp+ip+qp+rp #total people
-    
-    Ratio_sp=sp/Sum #ratio
+    Ratio_sp=sp/Sum
     Ratio_ip=ip/Sum
     Ratio_qp=qp/Sum
     Ratio_rp=rp/Sum
     
     print('Infected r',float(Ratio_ip))
     print('Total',Sum)
-    print('ip is',float(s[0]))
+    print('sp is',float(s[0]))
     print('ip is',float(s[1]),type(float(s[1])))
     print('qp is',float(s[2]))
     print('rp is',float(s[3]))
