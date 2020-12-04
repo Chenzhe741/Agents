@@ -7,7 +7,7 @@ import random
 from collections import deque
 import virl
 import sys
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 #import pylab as pl
 
 
@@ -23,7 +23,7 @@ class DQN():
         self.action_dim = 4
         self.create_Q_network()
         self.create_training_method()
-        self.rewardss= []
+
 
         # Init session
         self.session = tf.InteractiveSession()
@@ -132,13 +132,14 @@ if __name__ == "__main__":
     BATCH_SIZE = 32  # size of minibatch
     s = np.array([0., 0, 0, 0])  # epidemic state
     c = 1.  # infection rate damping
+    rewardss = []
 
     for i in range(1):
 
         try:
             episodes = int(sys.argv[1])
         except Exception as e:
-            episodes = int(500)
+            episodes = int(5)
         # is used to train several episodes,
         # random.seed(1)
         env = virl.Epidemic(noisy=False, problem_id=i)
@@ -178,6 +179,14 @@ if __name__ == "__main__":
             print('episode: {}, avg reward: {}'.format(episode, reward_episode_avgr))
             # output
             all_reward.append(reward_episode_avgr)
+
+            #Plot
+plt.plot(all_reward)
+plt.xlabel('episodes')
+plt.ylabel('avg_reward')
+plt.show()
+env.close()
+
 
 
 
