@@ -10,11 +10,12 @@ import os
 os.chdir('..')
 from matplotlib import pyplot as plt
 import numpy as np
-
+#.ac.uk/SebastianStein/virl/-/blob/master/notebooks/random_agent.ipynb
 import virl
 
-env = virl.Epidemic(stochastic=True, noisy=True)
-#env = virl.Epidemic(stochastic=False, noisy=False, problem_id=9)
+
+#env = virl.Epidemic(stochastic=True, noisy=True)
+env = virl.Epidemic(stochastic=False, noisy=False, problem_id=0)
 """
 Args:
     stochastic (bool): Is the infection rate sampled from some distribution at the beginning of each episode (default: False)?
@@ -52,12 +53,16 @@ while not done:
     R_qp=qp/Sum
     R_rp=rp/Sum
     
-    print('Total',Sum)
     
+    print('action space',env.action_space)
+   
+    print('Total',Sum)   
     print('Sup People',R_sp*100,'%')
     print('Ifc People',R_ip*100,'%')
     print('Qrt People',R_qp*100,'%')
     print('Rcv people',R_rp*100,'%')
+    
+   
     
     """    
     if R_ip<0.01 and R_sp<0.01:
@@ -71,7 +76,7 @@ while not done:
     elif R_ip>0.3 and R_sp>0.3:
         at=1
     """    
-    
+    print('Current r is',r)
     if R_ip<=0.01:
         if R_sp>R_rp>0.2:
             act=3
@@ -85,6 +90,7 @@ while not done:
     s, r, done, i = env.step(action=act) # deterministic agent
     #s, r, done, i = env.step(action=np.random.choice(env.action_space.n)) #random agent
     states.append(s)
+    
     
      
     print('====added s is',s)
