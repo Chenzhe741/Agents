@@ -142,41 +142,41 @@ if __name__ == "__main__":
         # is used to train several episodes,
         # random.seed(1)
         env = virl.Epidemic(noisy=False, problem_id=i)
-        # 定义环境类
+        # define env class
         action_dim = env.action_space.n
         # state_dim = env.observation_space.n
         agent = DQN()
 
-        # 根据环境类的动作维度定义agent类
+        # agent class in inrelated to env
         all_reward = []
-        # 总回报记录list1
+        # all reward record list1
         for episode in range(episodes + 1):
-            # 循环episodes次
+            # circle episodes times
             state = env.reset()
-            # 重启环境
-            agent.epsilon -= 0.9 / episodes
-            # 论文里要求探索从1到0.1，所以就每次给1-0.9/总episodes个数
+            # restart env
+            agent.epsilon -= 0.7/ episodes
+            # 0.1-1, choose one number between this range
             reward_perepisode = []
-            # 清空单个情节的汇报记录list2
+            # clear the report record of individual episodes list2
             while True:
-                # 死循环
+                # endless loop
                 action = agent.egreedy_action(state_gen(state))
-                # 生成动作
+                # action
                 state_, reward, done, _ = env.step(action)
-                # 动作作用环境，返回s',r,done
+                # action to env，return s',r,done
                 agent.perceive(state_gen(state), action, reward, state_gen(state_), done)
-                # agent学习，Q表格迭代更新
+                # agent learn，the Q table is updated iteratively
                 state = state_
-                # 状态更新
+                # update state
                 reward_perepisode.append(reward)
-                # list2记录每一步的回报
+                # list2 record every step's reward
                 if done:
                     break
-                    # 如果完成了一个episode，跳出死循环
+                    # if finish one episode，break out of the loop
             reward_episode_avgr = sum(reward_perepisode) / len(reward_perepisode)
-            # 计算这一episode的平均回报
+            # caculater episode's avg reward
             print('episode: {}, avg reward: {}'.format(episode, reward_episode_avgr))
-            # 输出对应参数
+            # output
             all_reward.append(reward_episode_avgr)
 
 
