@@ -10,16 +10,16 @@ import pandas as pd
 
 class TabularPolicy():
     """
-    Q(s,a) tabular. 
+    Q(s,a) tabular. # too gernerate the policy function
 
     """
  
-    def __init__(self, env, gamma=0.9, Q_size=5000, lr=0.01):
-        self.n_states = env.observation_space.shape[0]
-        self.n_actions = env.action_space.n
-        self.gamma = gamma
-        self.Q_size = Q_size
-        self.lr = lr
+    def __init__(self, env, gamma=0.9, Q_size=5000, lr=0.01): #initialization method of the class 
+        self.n_states = env.observation_space.shape[0]    #return the shape of the array of observation space
+        self.n_actions = env.action_space.n        #the action space, 0:none 1:full lockdown 2:track&trace 3:social distancing
+        self.gamma = gamma               #gama is the discounted return/cumulative future reward, need to modify
+        self.Q_size = Q_size      #for training size
+        self.lr = lr            #learning rate
         self.Q = np.zeros([Q_size, self.n_states + self.n_actions])
         self.Q_nums = 0
     def get_index(self, s):
@@ -33,18 +33,23 @@ class TabularPolicy():
             if distance <= 0:
                 return i
         return index
+    
+    #According to the input observation value, predict the output action value
     def predict(self, s, a=None):
         s_index = self.get_index(s)
         if a==None:
             return self.Q[s_index][self.n_states:]
 
         return self.Q[s_index][self.n_states:][a]
-
+    
+    
+#store s,a,r into Q and update Q
     def store(self, s, a, r):
         index = self.Q_nums % self.Q_size
         self.Q[index, self.n_states + a] = r
         self.Q_nums += 1
 
+    # method of updating Q-table 
     def update(self, s, a, target):
         s_index = self.get_index(s)
         r_index = self.n_states + a
@@ -59,7 +64,7 @@ from utils import (
     logging,
 )
 
-
+#training  and testing,save the results into file
 def train(Q_size=2000, n_episodes=50, discount_factor=0.95, epsilon=0.05):
     print('policy_searh tabular training...')
     env = virl.Epidemic()
@@ -75,7 +80,7 @@ def train(Q_size=2000, n_episodes=50, discount_factor=0.95, epsilon=0.05):
         pickle.dump(tabular, f)
 
 
-
+ # number of training episodes
 def get_eval(Q_size=2000, n_episodes=50, is_train=False, savefig=False):
     print('policy_searh tabular evaluating...')
     results_dir = './results/Policy_search_tabular'
